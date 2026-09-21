@@ -1,28 +1,5 @@
 import time
-import hashlib
-from itertools import product
-
-text = str(input("Enter the text to be cracked: "))
-algorithm = str(input("Enter the algorithm you want to use: "))
-
-def bruteforce(charset, max_size):
-    for i in range(1, max_size + 1):
-        for combination in product(charset, repeat=i):
-            result = "".join(combination)
-            yield result
-
-def hash_converter(text, algorithm):
-    text_bytes = text.encode('utf-8')
-    hash_obj = hashlib.new(algorithm)
-    hash_obj.update(text_bytes)
-    hash_hex = hash_obj.hexdigest()
-    return hash_hex 
-
-def load_wordlist(path):
-    with open(path, 'r') as file:
-        for line in file:
-            clean_line = line.strip()
-            yield clean_line
+from hash_utils import hash_converter
 
 def cracker(target_hash, algorithm, candidates):
     cont = 0
@@ -46,10 +23,4 @@ def cracker(target_hash, algorithm, candidates):
             print("Past seconds:", past_time)
     else:
         print("Hash not found.")
-
-
-cracker(hash_converter(text, algorithm), algorithm, load_wordlist("wordlist.txt"))
-charset = "ABCDEabcde"
-max_size = 3
-cracker(hash_converter(text, algorithm), algorithm, bruteforce(charset, max_size))
 
